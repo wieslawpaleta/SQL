@@ -1,0 +1,64 @@
+Microsoft SQL Server - Francais
+1.
+• Objectif : Trouver tous les employés qui occupent le poste de "Design Engineer" (Ingénieur concepteur).
+• Tables à utiliser : HumanResources.Employee
+• Indices : Utilisez une clause WHERE sur la colonne JobTitle.
+
+SELECT BusinessEntityID, NationalIDNumber, JobTitle, Gender
+FROM HumanResources.Employee
+WHERE JobTitle = 'Design Engineer';
+
+
+2.
+• Objectif : Afficher le nom (Name) et le prix de base (ListPrice) de tous les produits dont le prix est strictement supérieur à 1 000 $.
+• Tables à utiliser : Production.Product
+• Indices : Filtrez à l'aide de l'opérateur > et triez le résultat par prix décroissant (ORDER BY ... DESC).
+
+SELECT Name, ListPrice
+FROM Production.Product
+WHERE ListPrice > 1000
+ORDER BY ListPrice DESC;
+
+
+3.
+• Objectif : Extraire le prénom (FirstName) et le nom de famille (LastName) de toutes les personnes dont le nom commence par la lettre "M".
+• Tables à utiliser : Person.Person
+• Indices : Utilisez l'opérateur LIKE avec le joker %
+
+SELECT FirstName, LastName
+FROM Person.Person
+WHERE FirstName LIKE 'M%'
+ORDER BY LastName, FirstName;
+
+4.
+• Objectif : Afficher le prénom, le nom de famille et l'adresse e-mail de chaque personne enregistrée.
+• Tables à utiliser : Person.Person et Person.EmailAddress
+• Indices : Faites une jointure interne (INNER JOIN) en utilisant la clé commune BusinessEntityID.
+
+SELECT p.FirstName, p.LastName, e.EmailAddress
+FROM Person.person AS p
+INNER JOIN Person.EmailAddress AS e
+	ON p.BusinessEntityID = e.BusinessEntityID;
+
+5.
+• Objectif : Connaître le montant total des ventes (SubTotal) ainsi que le nombre total de commandes pour chaque territoire de vente (TerritoryID).
+• Tables à utiliser : Sales.SalesOrderHeader
+• Indices : Vous aurez besoin des fonctions d'agrégation SUM() et COUNT(), regroupées par la clause GROUP BY TerritoryID.
+
+6.
+• Objectif : Identifier les clients (CustomerID) qui ont passé plus de 25 commandes au total.
+• Tables à utiliser : Sales.SalesOrderHeader
+• Indices : Utilisez GROUP BY CustomerID et appliquez la condition sur le nombre de commandes avec la clause HAVING (et non WHERE).
+
+7.
+• Objectif : Trouver tous les produits dont le prix de vente (ListPrice) est supérieur à la moyenne globale des prix de tous les produits.
+• Tables à utiliser : Production.Product
+• Indices : Créez une sous-requête dans votre clause WHERE pour calculer d'abord AVG(ListPrice).
+
+8.
+• Objectif : Classer chaque commande (SalesOrderID) d'un employé selon son montant (TotalDue), du plus grand au plus petit, pour chaque employé individuellement.
+• Tables à utiliser : Sales.SalesOrderHeader
+• Indices : Utilisez la fonction de fenêtrage ROW_NUMBER() ou DENSE_RANK() combinée avec OVER (PARTITION BY SalesPersonID ORDER BY TotalDue DESC).
+
+9.
+• Objectif : SQL Server 2025 intègre nativement les expressions régulières (REGEXP_LIKE, REGEXP_REPLACE). Essayez d'extraire ou de filtrer les descriptions de produits de la table Production.ProductDescription qui contiennent des formats spécifiques (comme des suites de chiffres ou des structures textuelles complexes) en utilisant ces nouvelles fonctions.
