@@ -39,14 +39,25 @@ for all of their rentals. Display the customer's
 first name, last name, and the total amount paid, 
 ordered alphabetically by last name.
 
-SELECT c.first_name, c.last_name, SUM() <-- tutaj skończyłem
+SELECT c.first_name, c.last_name, SUM(p.amount) AS total_amount_paid
+FROM customer c
+INNER JOIN payment p ON c.customer_id = p.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name
+ORDER BY total_amount_paid ASC;  
 
 
 5.
-	List all film categories and the average running time 
-    (length) of films within each category. 
-    Display the category name and the average length, 
-    sorted from longest to shortest average runtime.
+List all film categories and the average running time 
+(length) of films within each category. 
+Display the category name and the average length, 
+sorted from longest to shortest average runtime.
+
+SELECT c.name AS category_name, AVG(f.length) AS average_length
+FROM category c
+INNER JOIN film_category fc ON c.category_id = fc.category_id
+INNER JOIN film f ON fc.film_id = f.film_id
+GROUP BY c.category_id, c.name
+ORDER BY average_length;
 
 
 6.
@@ -55,6 +66,11 @@ for rent from Store 1. Criteria: The film must exist
 in the store's inventory, and there must be 
 no outstanding rental for that specific inventory item 
 (meaning return_date is not NULL).
+
+SELECT f.title, i.inventory_id, i.store_id
+FROM film f
+INNER JOIN inventory i ON f.inventory_id = i.inventory_id <-- tu skończyłem
+
 
 
 7.
