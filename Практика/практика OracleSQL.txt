@@ -1,0 +1,48 @@
+Oracle Deutsch
+
+Übung 1: Basis-Filterung & Sortierung Aufgabe: 
+Schreiben Sie eine Abfrage, die die first_name, last_name, salary und department_id aller Mitarbeiter anzeigt, die in der Abteilung 90 oder 100 arbeiten und ein Gehalt von mehr als 10.000 haben. Sortieren Sie das Ergebnis nach dem Gehalt absteigend.
+
+SELECT first_name, last_name, salary, department_id
+FROM employees
+WHERE department_id IN (90, 100)
+AND salary > 10000
+ORDER BY salary DESC;
+
+
+Übung 2: Joins (Tabellenverknüpfung) Aufgabe: 
+Zeigen Sie den vollständigen Namen des Mitarbeiters (first_name und last_name zusammengefügt als full_name), den Namen der Abteilung (department_name) und die Stadt (city) an, in der sie arbeiten.
+
+SELECT e.first_name || ' ' || e.last_name AS der_vollständige_Name,
+d.department_name, l.city
+FROM employees e
+INNER JOIN departments d ON e.department_id = d.department_id
+INNER JOIN locations l ON d.location_id = l.location_id;
+
+
+Übung 3: Aggregation & Gruppierung Aufgabe: 
+Ermitteln Sie für jede Job-ID (job_id) die Anzahl der Mitarbeiter, das durchschnittliche Gehalt (gerundet auf zwei Nachkommastellen) und das maximale Gehalt. Es sollen nur Jobs angezeigt werden, bei denen das maximale Gehalt über 15.000 liegt.
+
+SELECT job_id, COUNT(*) AS Mitarbeiterzahl,
+ROUND(AVG(salary), 2) AS Durchschnittsgehalt,
+MAX(salary) AS Höchstgehalt
+FROM employees
+GROUP BY job_id
+HAVING MAX(salary) > 15000;
+
+
+Übung 4: 
+Subqueries (Unterabfragen) Aufgabe: Finden Sie alle Mitarbeiter (Vorname, Nachname, Gehalt), die mehr verdienen als das durchschnittliche Gehalt aller Mitarbeiter in der gesamten Firma.
+
+
+SELECT first_name, last_name, salary
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees
+)
+ORDER BY salary ASC;
+
+
+
+

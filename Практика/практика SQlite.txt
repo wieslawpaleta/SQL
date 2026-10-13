@@ -1,0 +1,59 @@
+
+1. Listar clientes de Brasil
+
+• Enunciado: Selecciona el nombre, 
+apellido y país de todos los clientes 
+que son de Brasil.
+
+SELECT FirstName, LastName, Country
+FROM Customer
+WHERE Country = 'Brazil';
+
+
+2. Canciones de más de 6 minutos
+
+• Enunciado: Muestra el nombre y 
+la duración (en milisegundos) de las canciones 
+que duran más de 6 minutos (360,000 milisegundos).
+
+SELECT Name, Milliseconds
+FROM Track
+WHERE Milliseconds > 360000;
+
+
+3. Total de facturación por país
+
+• Enunciado: Calcula el total de dinero facturado (Total) 
+por cada país de facturación (BillingCountry), 
+ordenado de mayor a menor.
+
+SELECT BillingCountry, SUM(Total) AS TotalVentas
+FROM Invoice
+GROUP BY BillingCountry
+ORDER BY TotalVentas DESC;
+
+
+4. Canciones y sus respectivos álbumes
+
+• Enunciado: Muestra los nombres de las primeras 10 canciones
+ junto al título del álbum al que pertenecen.
+
+SELECT t.Name AS Canción, a.Title AS Album
+FROM Track t
+INNER JOIN Album a ON t.AlbumId = a.AlbumId
+LIMIT 10;
+
+
+5. El artista con más canciones
+
+• Enunciado: Encuentra el nombre del artista 
+que tiene la mayor cantidad de canciones 
+en la base de datos y cuántas tiene.
+
+SELECT ar.Name AS Artista, COUNT(t.TrackId) AS TotalCanciones
+FROM Artist ar
+INNER JOIN Album al ON ar.ArtistId = al.ArtistId
+INNER JOIN Track t ON al.AlbumId = t.AlbumId
+GROUP BY ar.ArtistId
+ORDER BY TotalCanciones DESC
+LIMIT 1;
