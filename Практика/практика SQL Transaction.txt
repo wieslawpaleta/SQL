@@ -1,0 +1,36 @@
+BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO Zamowienia (ProduktId, Ilosc) VALUES (10, 2);
+        UPDATE Magazyn SET Stan = Stan - 2 WHERE ProduktId = 10;
+
+        COMMIT;
+END TRY
+BEGIN CATCH
+
+         ROLLBACK;
+
+         PRINT ‘Wystąpił błąd. Transakcja została bezpiecznie wycofana.’;
+END CATCH
+
+
+BEGIN TRANSACATION:
+
+UPDATE Konta
+SET saldo = saldo - 100
+WHERE uzytkownik = ‘Tytus Bomba’;
+
+UPDATE Konta
+SET saldo = saldo + 100
+WHERE uzytkownik = ‘Wiesław Paleta’;
+
+COMMIT;
+
+
+BEGIN TRANSACATION:
+
+UPDATE Konta
+SET saldo = saldo - 100
+WHERE uzytkownik = ‘Tytus Bomba’;
+
+ROLLBACK;
