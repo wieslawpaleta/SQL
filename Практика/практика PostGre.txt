@@ -55,8 +55,21 @@ ORDER BY ROUND(AVG(p.unit_price)::numeric, 2) DESC;
 и скидки (discount), а затем вывести 
 топ-5 самых дорогих заказов за всю историю.
 
+SELECT order_id,
+ROUND(SUM(unit_price * quantity * (1 - discount))::numeric, 2) AS total_cost
+FROM order_details
+GROUP BY order_id
+LIMIT 5;
+
 
 6.
 Используя оконные функции, ранжировать продукты внутри 
 каждой категории по их цене (от самых дорогих к самым дешевым). 
 Вывести название категории, название продукта, цену и его ранг.
+
+SELECT c.category_name, p.product_name, p.unit_price, 
+DENSE_RANK() OVER 
+(PARTITION BY c.category_id ORDER BY p. unit_price DESC
+) AS product_rank
+FROM products p
+INNER JOIN categories c ON p.category_id = c.category_id;
