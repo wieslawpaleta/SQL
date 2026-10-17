@@ -73,3 +73,57 @@ DENSE_RANK() OVER
 ) AS product_rank
 FROM products p
 INNER JOIN categories c ON p.category_id = c.category_id;
+
+
+7. Вывести список клиентов (customers), 
+у которых в поле contact_title содержится слово 'Manager', 
+отсортировав их по названию компании (company_name).
+
+SELECT customer_id,  company_name, contact_name, contact_title
+FROM customers
+WHERE contact_title LIKE '%Manager%'
+ORDER BY company_name;
+
+
+8. Найти общую сумму, которую каждый клиент потратил за все время 
+(учитывая unit_price, quantity и discount в order_details). 
+Вывести company_name и общую сумму, отсортировав от больших трат к меньшим.
+
+SELECT c.company_name, ROUND(SUM(od.unit_price * od.quantity * 
+(1 - od.discount))::numeric, 2) AS total_spent
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN order_details od ON o.order_id = od.order_id
+GROUP BY c.customer_id, c.company_name
+ORDER BY total_spent DESC;
+
+
+9. Вывести список поставщиков (suppliers), 
+от которых на данный момент нет ни одного активного продукта на складе 
+(то есть units_in_stock = 0 для всех их продуктов).
+
+SELECT supplier_id, company_name
+FROM suppliers s
+WHERE NOT EXISTS (SELECT 1 FROM products p 
+					WHERE p.supplier_id = s.supplier_id
+					AND p.units_in_stock > 0);
+
+
+10. Посчитать количество заказов, оформленных в каждый год. 
+Вывести год и число заказов. Отсортировать по хронологии.
+
+SELECT EXTRACT(YEAR FROM order_date) AS order_year,
+COUNT(order_id) AS total_orders
+FROM orders
+GROUP BY EXTRACT(YEAR FROM order_date)
+ORDER BY order_year;
+
+
+11. Для каждого сотрудника вывести его ID, ID его заказов, 
+дату текущего заказа, а также дату его предыдущего заказа (LAG), 
+чтобы увидеть частоту работы менеджера.
+
+
+12. Вывести список стран, в которые было отправлено более 50 заказов 
+(поле ship_country в таблице orders), и среднюю стоимость доставки 
+(freight) для этих стран.
