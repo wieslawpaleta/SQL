@@ -57,3 +57,38 @@ INNER JOIN Track t ON al.AlbumId = t.AlbumId
 GROUP BY ar.ArtistId
 ORDER BY TotalCanciones DESC
 LIMIT 1;
+
+
+6. Encuentra el Top 5 de clientes que 
+han gastado más dinero en total en la tienda.
+
+SELECT c.CustomerId, c.FirstName, c.LastName, 
+SUM(i.Total) AS TotalGastado
+FROM Customer c 
+INNER JOIN Invoice i ON c.CustomerId = i.CustomerId 
+GROUP BY c.CustomerId ORDER BY TotalGastado DESC
+LIMIT 5;
+
+
+7. Identifica qué canciones nunca se han vendido 
+(no aparecen en ninguna factura).
+
+SELECT t.TrackId, t.Name FROM Track t
+LEFT JOIN InvoiceLine il ON t.TrackId = il.TrackId
+WHERE il.InvoiceLineId IS NULL;
+
+8. Muestra el nombre de cada empleado 
+junto al nombre de su jefe directo (usando Self-Join).
+
+SELECT e.FirstName AS Empleado, e.Title AS Puesto,
+j.FirstName AS Jefe
+FROM Employee e
+LEFT JOIN Employee j ON e.ReportsTo = j.EmployeeId;
+
+9.Lista los géneros musicales más populares 
+basados en la cantidad de canciones vendidas.
+
+
+10. Calcula la duración promedio (en minutos) 
+de las canciones de cada álbum, 
+mostrando solo los que promedian más de 5 minutos.
