@@ -44,5 +44,49 @@ WHERE salary > (
 ORDER BY salary ASC;
 
 
+Übung 5:
+Zeige alle Abteilungen (department_name) 
+und den Nachnamen ihres Managers an. 
+Es müssen auch Abteilungen ohne Manager 
+in der Liste erscheinen (der Managername bleibt dann leer). 
+
+SELECT d.department_name, e.last_name AS manager_name
+FROM departments d
+LEFT JOIN employees e 
+ON d.manager_id = e.manager_id;
+
+
+Übung 6: 
+Finde alle Mitarbeiter (first_name, last_name, salary, department_id), 
+die mehr verdienen als das Durchschnittsgehalt ihrer eigenen Abteilung. 
+
+SELECT e.first_name, e.last_name, e.salary, e.department_id
+FROM employees e 
+WHERE e.salary > (SELECT AVG(ie.salary) FROM employees ie
+                    WHERE ie.department_id = e.department_id);                                              
+
+
+Übung 7: Ermittle alle Mitarbeiter, 
+die im Jahr 2005 eingestellt wurden (hire_date). 
+Zeige den vollen Namen in Großbuchstaben und 
+das Einstellungsdatum im Format 'DD.MM.YYYY' an. 
+
+SELECT
+    UPPER(first_name || ' ' || last_name) AS full_name,
+    TO_CHAR(hire_date, 'DD.MM.YYYY') AS DMY_hire_date
+FROM
+    employees
+WHERE
+    EXTRACT(YEAR FROM hire_date) = 2005;
+
+
+Übung 8: 
+Erstelle eine Rangliste der Mitarbeiter innerhalb 
+jeder Abteilung basierend auf ihrem Gehalt 
+(höchstes Gehalt zuerst). Zeige department_id, 
+last_name, salary und den Rang an. 
+
+
+
 
 
