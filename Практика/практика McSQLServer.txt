@@ -88,4 +88,61 @@ WHERE SalesPersonID IS NOT NULL;
 
 
 9.
-• Objectif : SQL Server 2025 intègre nativement les expressions régulières (REGEXP_LIKE, REGEXP_REPLACE). Essayez d'extraire ou de filtrer les descriptions de produits de la table Production.ProductDescription qui contiennent des formats spécifiques (comme des suites de chiffres ou des structures textuelles complexes) en utilisant ces nouvelles fonctions.
+• Objectif : SQL Server 2025 intègre nativement les expressions régulières 
+(REGEXP_LIKE, REGEXP_REPLACE). Essayez d'extraire ou 
+de filtrer les descriptions de produits de la table Production.ProductDescription qui
+ contiennent des formats spécifiques 
+ (comme des suites de chiffres ou des structures textuelles complexes) 
+ en utilisant ces nouvelles fonctions.
+
+ALTER DATABASE [AdventureWorks2025] SET COMPATIBILITY_LEVEL = 170; 
+-- "COMPATIBILITY_LEVEL = 170" = SQL Server version 2025
+GO
+-- C'est un délimiteur de lot (batch). 
+-- Il demande à SQL Server Management Studio (SSMS) d'exécuter 
+-- la commande précédente avant de passer à la suite.
+
+
+SELECT ProductDescriptionID, Description 
+FROM Production.ProductDescription 
+WHERE REGEXP_LIKE(Description, '\d{3,}');
+/* REGEXP_LIKE, C'est une fonction de recherche. 
+Elle vérifie si le texte de la colonne Description correspond 
+au modèle (pattern) défini en deuxième argument. 
+Comme elle renvoie un type de données booléen (TRUE ou FALSE), 
+elle se place directement après le WHERE.
+• \d : Représente n'importe quel chiffre de 0 à 9.
+• {3,} : Signifie "au moins 3 fois, ou plus".
+*/
+
+
+SELECT ProductDescriptionID, Description 
+FROM Production.ProductDescription 
+WHERE REGEXP_LIKE(Description, '\.$');
+/*
+• \. : En expression régulière, le point . est un caractère spécial 
+qui signifie "n'importe quel caractère". 
+Pour rechercher un véritable point final, 
+il faut "l'échapper" en mettant un anti-slash \ devant.
+• $ : Ce symbole représente la fin de la chaîne de caractères.
+*/
+
+
+SELECT ProductDescriptionID, Description AS Original,
+REGEXP_REPLACE(Description, '\b\d{4}\b', '****') 
+AS ModifiedDescription
+FROM Production.ProductDescription;
+/*
+• REGEXP_REPLACE(chaîne, modèle, remplacement) : 
+Contrairement à REGEXP_LIKE qui filtre, cette fonction modifie le contenu.
+Elle cherche le modèle et le remplace par le nouveau texte spécifié 
+(ici '****'). Elle renvoie la nouvelle chaîne modifiée.
+• '\b\d{4}\b' (Le modèle) :
+• \b : Indique une frontière de mot (word boundary). 
+Cela garantit que l'on isole un nombre autonome et 
+non une partie d'un nombre plus grand 
+(par exemple, cela trouvera "2025" mais ignorera le "2025" 
+caché dans "120255").
+• \d{4} : Recherche une suite de exactement 4 chiffres.
+*/
+
