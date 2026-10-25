@@ -1,0 +1,21 @@
+MongoDB sample_analytics.transactions 
+
+1. Find the transaction details for 
+the first account in your imported file (443178).
+
+{ account_id: 443178 }
+
+
+2. Find highly active accounts that 
+have strictly more than 60 transactions (transaction_count).
+
+{ transaction_count: { $gt: 60 } }  // $gt = greater than
+
+
+3.  Look inside the nested arrays to find documents 
+where a transaction involved Apple stock (aapl).
+
+{ "transactions.symbol": "aapl" } // something like "WHERE" in SQL. 
+                                  // "Znajdź mi dokumenty, 
+                                  // w których wewnątrz obiektu (lub listy) 
+                                  // transactions znajduje się pole symbol równe "aapl"."
