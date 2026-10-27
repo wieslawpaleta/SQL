@@ -80,12 +80,59 @@ WHERE
     EXTRACT(YEAR FROM hire_date) = 2005;
 
 
-Übung 8: 
+Übung 8: (tego jeszcze nie zrobiłem)
 Erstelle eine Rangliste der Mitarbeiter innerhalb 
 jeder Abteilung basierend auf ihrem Gehalt 
 (höchstes Gehalt zuerst). Zeige department_id, 
 last_name, salary und den Rang an. 
 
+
+Oracle Russian
+
+на случай, если ты снова заблокируешь свой аккаунт 
+ALTER USER nazwa_użytkownika ACCOUNT UNLOCK;  
+
+
+1. Выведите имена (first_name), фамилии (last_name) и 
+зарплату (salary) всех сотрудников, у которых зарплата больше 10 000.
+
+SELECT first_name, last_name, salary
+FROM EMPLOYEES
+WHERE salary > 10000;
+
+
+2. Выведите список всех уникальных идентификаторов должностей 
+(job_id) из таблицы сотрудников (EMPLOYEES), 
+отсортированный по возрастанию
+	
+SELECT DISTINCT(job_id)
+FROM EMPLOYEES
+ORDER BY job_id ASC;
+
+
+3. Выведите имя, фамилию сотрудника и 
+название его департамента (department_name). 
+Для этого объедините таблицы employees и departments.
+
+SELECT e.first_name, e.last_name, d.department_name
+FROM EMPLOYEES e
+JOIN DEPARTMENTS d ON e.department_id = d.department_id;
+
+
+4. Посчитайте количество сотрудников и 
+среднюю зарплату для каждого департамента (department_id). 
+Результат отфильтруйте так, чтобы остались только те департаменты, 
+где средняя зарплата выше 5 000
+
+
+5. Найдите всех сотрудников, 
+чья зарплата выше средней зарплаты по всей компании. 
+Выведите их имена, фамилии и зарплату. 
+
+
+6.Выведите список сотрудников, указав для каждого: 
+имя, фамилию, его зарплату, а также максимальную зарплату 
+в его департаменте рядом с каждой строкой.
 
 
 

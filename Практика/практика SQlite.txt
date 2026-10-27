@@ -88,7 +88,24 @@ LEFT JOIN Employee j ON e.ReportsTo = j.EmployeeId;
 9.Lista los géneros musicales más populares 
 basados en la cantidad de canciones vendidas.
 
+SELECT
+    g.Name AS Genero,
+    SUM(il.Quantity) AS Cantidad_Vendida 
+FROM Genre g
+JOIN Track t ON g.GenreId = t.GenreId
+JOIN InvoiceLine il ON t.TrackId = il.TrackId
+GROUP BY g.GenreId, g.Name
+ORDER BY Cantidad_Vendida DESC;
 
 10. Calcula la duración promedio (en minutos) 
 de las canciones de cada álbum, 
 mostrando solo los que promedian más de 5 minutos.
+
+SELECT 
+    a.Title AS Album, 
+    AVG(t.Milliseconds) / 60000.0 AS Duracion_Promedio_Minutos
+FROM Album a
+JOIN Track t ON a.AlbumId = t.AlbumId
+GROUP BY a.AlbumId, a.Title
+HAVING Duracion_Promedio_Minutos > 5.0
+ORDER BY Duracion_Promedio_Minutos DESC;
