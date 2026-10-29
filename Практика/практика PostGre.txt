@@ -123,6 +123,16 @@ ORDER BY order_year;
 дату текущего заказа, а также дату его предыдущего заказа (LAG), 
 чтобы увидеть частоту работы менеджера.
 
+SELECT 	employee_id, 
+		order_id, 
+		order_date, 
+		LAG(order_date) OVER (
+			PARTITION BY employee_id
+			ORDER BY order_date, order_id
+		) AS previous_order_date
+FROM
+	orders;
+	
 
 12. Вывести список стран, в которые было отправлено более 50 заказов 
 (поле ship_country в таблице orders), и среднюю стоимость доставки 

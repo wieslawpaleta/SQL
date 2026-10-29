@@ -146,3 +146,80 @@ caché dans "120255").
 • \d{4} : Recherche une suite de exactement 4 chiffres.
 */
 
+McSQLServer russian
+
+10. 
+• Цель: Найти все детали/продукты, которые имеют красный (Red) или черный (Black) цвет.
+• Таблица: Production.Product
+• Подсказка: Используйте оператор IN в предложении WHERE для проверки цвета (Color) 
+и выведите столбцы ProductID, Name, ProductNumber и Color.
+
+SELECT ProductID, Name, ProductNumber, Color
+FROM Production.Product
+WHERE color = 'Red' or color = 'Black';
+
+
+11.
+• Цель: Вывести 10 самых тяжелых товаров, у которых указан вес.
+• Таблица: Production.Product
+• Подсказка: Используйте TOP 10, отфильтруйте пустые значения (Weight IS NOT NULL) 
+и отсортируйте результат по столбцу Weight в порядке убывания (DESC).
+
+SELECT TOP 10 ProductID, Name, Weight
+FROM Production.Product
+WHERE Weight IS NOT NULL
+ORDER BY Weight DESC;
+
+
+12. 
+• Цель: Найти всех сотрудников, чья должность (JobTitle) содержит слово «Manager».
+• Таблица: HumanResources.Employee
+• Подсказка: Примените оператор LIKE с подстановочными знаками % с обеих сторон слова.
+
+SELECT BusinessEntityID, JobTitle
+FROM HumanResources.Employee
+WHERE JobTitle LIKE '%Manager%';
+
+
+
+Задание 4: Внутреннее объединение (INNER JOIN)
+
+• Цель: Отобразить название продукта (Name) и название его подкатегории (Name из таблицы подкатегорий).
+• Таблицы: Production.Product и Production.ProductSubcategory
+• Подсказка: Свяжите таблицы с помощью INNER JOIN по ключу ProductSubcategoryID. Используйте псевдонимы (алиасы) для таблиц, чтобы избежать совпадения имен столбцов.
+
+Задание 5: Группировка и агрегатные функции
+
+• Цель: Посчитать количество сотрудников (BusinessEntityID) для каждого уникального типа графика/смены (ShiftID).
+• Таблица: HumanResources.EmployeeDepartmentHistory
+• Подсказка: Сгруппируйте данные через GROUP BY ShiftID и используйте функцию COUNT().
+
+Задание 6: Фильтрация групп (HAVING)
+
+• Цель: Найти категории подкатегорий товаров (ProductSubcategoryID), в которых средняя базовая цена (ListPrice) продуктов строго выше 500 $.
+• Таблица: Production.Product
+• Подсказка: Сгруппируйте по ProductSubcategoryID, примените функцию AVG(ListPrice) и отфильтруйте группы с помощью HAVING.
+
+Задание 7: Подзапросы (Subqueries)
+
+• Цель: Найти все заказы, сумма которых (SubTotal) выше, чем максимальная сумма заказа, оформленного продавцом с SalesPersonID = 277.
+• Таблица: Sales.SalesOrderHeader
+• Подсказка: В условии WHERE используйте знак > и в скобках напишите подзапрос, который находит MAX(SubTotal) для указанного продавца.
+
+Задание 8: Оконные функции (Window Functions)
+
+• Цель: Присвоить уникальный ранг (порядковый номер) каждому продукту внутри его подкатегории (ProductSubcategoryID) на основе его цены (ListPrice) от самой дорогой к самой дешевой.
+• Таблица: Production.Product
+• Подсказка: Используйте оконную функцию DENSE_RANK() или ROW_NUMBER() в сочетании с OVER(PARTITION BY ProductSubcategoryID ORDER BY ListPrice DESC). Исключите продукты, у которых нет подкатегории (WHERE ProductSubcategoryID IS NOT NULL).
+
+Задание 9: Новые регулярные выражения SQL Server 2025 (REGEXP_LIKE)
+
+• Цель: Из таблицы адресов найти все записи, где почтовый индекс (PostalCode) состоит ровно из 5 цифр (например, американские индексы вроде "98052").
+• Таблица: Person.Address
+• Подсказка: Используйте функцию REGEXP_LIKE в блоке WHERE. Шаблон регулярного выражения для проверки начала и конца строки из пяти цифр: '^\d{5}$'.
+
+Задание 10: Модификация текста (REGEXP_REPLACE в SQL Server 2025)
+
+• Цель: В описаниях продуктов найти упоминания любых двузначных чисел (например, процентов, градусов или размеров типа "20" или "15") и заменить их на текст [NUM].
+• Таблица: Production.ProductDescription
+• Подсказка: Используйте функцию REGEXP_REPLACE в блоке SELECT. Шаблон для поиска отдельно стоящего двузначного числа: '\b\d{2}\b'
