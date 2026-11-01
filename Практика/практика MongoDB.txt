@@ -19,3 +19,27 @@ where a transaction involved Apple stock (aapl).
                                   // "Znajdź mi dokumenty, 
                                   // w których wewnątrz obiektu (lub listy) 
                                   // transactions znajduje się pole symbol równe "aapl"."
+
+
+4. Найдите все документы, у 
+которых количество транзакций (transaction_count) 
+строго больше или равно 95.
+
+{ "transaction_count": { "$gte": 95 } }
+
+
+5. Каждая транзакция внутри массива transactions 
+имеет поле transaction_code (например, "buy" или "sell").
+Условие: Найдите все аккаунты, 
+у которых есть хотя бы одна операция по продаже ("sell").
+
+{ "transactions.transaction_code": "sell" }
+
+
+6. Выведите на экран только номер аккаунта (account_id) 
+и количество транзакций (transaction_count). 
+Стандартное поле _id нужно скрыть.
+
+Project: { "account_id": 1, "transaction_count": 1, "_id": 0 }
+
+
