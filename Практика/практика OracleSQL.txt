@@ -124,10 +124,25 @@ JOIN DEPARTMENTS d ON e.department_id = d.department_id;
 Результат отфильтруйте так, чтобы остались только те департаменты, 
 где средняя зарплата выше 5 000
 
+SELECT 
+    department_id,
+    COUNT(employee_id) AS employee_count,
+    ROUND(AVG(salary), 2) AS average_salary
+FROM employees
+WHERE department_id IS NOT NULL
+GROUP BY department_id
+HAVING AVG(salary) > 5000
+ORDER BY average_salary DESC;
+
 
 5. Найдите всех сотрудников, 
 чья зарплата выше средней зарплаты по всей компании. 
 Выведите их имена, фамилии и зарплату. 
+
+SELECT first_name, last_name, salary
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees)
+ORDER BY salary DESC;
 
 
 6.Выведите список сотрудников, указав для каждого: 
