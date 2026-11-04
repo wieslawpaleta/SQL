@@ -137,3 +137,40 @@ FROM
 12. Вывести список стран, в которые было отправлено более 50 заказов 
 (поле ship_country в таблице orders), и среднюю стоимость доставки 
 (freight) для этих стран.
+
+SELECT ship_country, AVG(freight) AS average_freight
+FROM orders
+GROUP BY ship_country
+HAVING COUNT(order_id) > 50;
+
+
+13.  Выведите список category_id и максимальную цену товара (unit_price) 
+в этой категории из таблицы products. Выведите только те категории, 
+у которых максимальная цена превышает 50.
+
+SELECT category_id, MAX(unit_price)
+FROM products
+GROUP BY category_id
+HAVING MAX(unit_price) > 50;
+
+
+14. Посчитайте количество заказов для каждого клиента (customer_id) из таблицы orders. 
+Выведите только тех клиентов, которые сделали более 15 заказов, 
+и отсортируйте результат по убыванию количества заказов.
+
+SELECT customer_id, COUNT(order_id)
+FROM orders
+GROUP BY customer_id
+HAVING COUNT(order_id) > 15
+ORDER BY COUNT(customer_id);
+
+
+15. Используя таблицы orders и employees, выведите фамилию сотрудника (last_name) 
+и общую сумму стоимости доставки (freight) для всех оформленных им заказов. 
+Сгруппируйте по фамилии.
+
+
+16. Из таблицы order_details выведите product_id и общую сумму проданного количества товара (quantity). Оставьте только те товары, которых было продано суммарно более 250 единиц.
+
+
+17. Напишите запрос, который объединяет таблицы orders и order_details. Выведите order_id и общую стоимость заказа (считается как unit_price * quantity), но только для тех заказов, где эта общая стоимость больше 5000.
