@@ -181,12 +181,17 @@ FROM HumanResources.Employee
 WHERE JobTitle LIKE '%Manager%';
 
 
-
 Задание 4: Внутреннее объединение (INNER JOIN)
 
 • Цель: Отобразить название продукта (Name) и название его подкатегории (Name из таблицы подкатегорий).
 • Таблицы: Production.Product и Production.ProductSubcategory
 • Подсказка: Свяжите таблицы с помощью INNER JOIN по ключу ProductSubcategoryID. Используйте псевдонимы (алиасы) для таблиц, чтобы избежать совпадения имен столбцов.
+
+SELECT p.Name, ps.Name
+FROM Production.Product AS p
+INNER JOIN Production.ProductSubcategory AS ps
+	ON p.ProductSubcategoryID = ps.ProductSubcategoryID;
+
 
 Задание 5: Группировка и агрегатные функции
 
@@ -194,17 +199,37 @@ WHERE JobTitle LIKE '%Manager%';
 • Таблица: HumanResources.EmployeeDepartmentHistory
 • Подсказка: Сгруппируйте данные через GROUP BY ShiftID и используйте функцию COUNT().
 
+SELECT  COUNT(BusinessEntityID), ShiftID
+FROM HumanResources.EmployeeDepartmentHistory
+GROUP BY ShiftID;
+
+
 Задание 6: Фильтрация групп (HAVING)
 
 • Цель: Найти категории подкатегорий товаров (ProductSubcategoryID), в которых средняя базовая цена (ListPrice) продуктов строго выше 500 $.
 • Таблица: Production.Product
 • Подсказка: Сгруппируйте по ProductSubcategoryID, примените функцию AVG(ListPrice) и отфильтруйте группы с помощью HAVING.
 
+SELECT ProductSubcategoryID,
+	   AVG(ListPrice) AS AveragePrice
+FROM Production.Product
+GROUP BY ProductSubcategoryID
+HAVING AVG(ListPrice) > 500;
+
+
 Задание 7: Подзапросы (Subqueries)
 
 • Цель: Найти все заказы, сумма которых (SubTotal) выше, чем максимальная сумма заказа, оформленного продавцом с SalesPersonID = 277.
 • Таблица: Sales.SalesOrderHeader
 • Подсказка: В условии WHERE используйте знак > и в скобках напишите подзапрос, который находит MAX(SubTotal) для указанного продавца.
+
+SELECT *
+FROM Sales.SalesOrderHeader
+WHERE SubTotal > (SELECT MAX(SubTotal)
+		FROM Sales.SalesOrderHeader
+		WHERE SalesPersonID = 277
+		);
+		
 
 Задание 8: Оконные функции (Window Functions)
 
