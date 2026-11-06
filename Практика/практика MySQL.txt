@@ -196,8 +196,39 @@ INNER JOIN country co ON ci.country_id = co.country_id
 GROUP BY s.store_id, ci.city, co.country;
 
 
-17. Выведите имена, фамилии и email-адреса покупателей, которые суммарно арендовали более 40 фильмов. Отсортируйте список по количеству аренд от большего к меньшему.
+17. Выведите имена, фамилии и email-адреса покупателей, 
+которые суммарно арендовали более 40 фильмов. 
+Отсортируйте список по количеству аренд от большего к меньшему.
 
-18. Определите категорию фильмов, в которой задействовано наибольшее количество уникальных актеров. Выведите название категории и число актеров.
+SELECT c.first_name, c.last_name, c.email, COUNT(r.rental_id) AS total_rentals
+FROM customer c
+JOIN rental r ON c.customer_id = r.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name, c.email
+HAVING total_rentals > 40
+ORDER BY total_rentals DESC;
 
-19.  Выведите список актеров (имя и фамилию), которые снимались в фильмах с рейтингом 'R', но при этом никогда не снимались в фильмах с рейтингом 'G'.
+
+18. Определите категорию фильмов, 
+в которой задействовано наибольшее количество уникальных актеров. 
+Выведите название категории и число актеров.
+
+SELECT ct.name, COUNT(DISTINCT fa.actor_id) AS unique_actors
+FROM category ct
+JOIN film_category fc ON ct.category_id = fc.category_id
+JOIN film_actor fa ON fc.film_id = fa.film_id
+GROUP BY ct.category_id, ct.name
+ORDER BY unique_actors DESC
+LIMIT 1;
+
+
+19.  Выведите список актеров (имя и фамилию), 
+которые снимались в фильмах с рейтингом 'R', 
+но при этом никогда не снимались в фильмах с рейтингом 'G'.
+
+SELECT
+    a.first_name,
+    a.last_name
+FROM actor a 
+JOIN film_actor fa ON a.actor_id = fa.actor_id
+JOIN film f ON fa.film_id = f.film_id
+WHERE f.rating = 'R' AND
