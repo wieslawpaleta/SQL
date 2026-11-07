@@ -1,0 +1,35 @@
+BigQuery - google-books-ngrams-2020
+
+1. Общая частота упоминаний (term_frequency) 
+и количество документов/книг (document_frequency) 
+для слова 'computer' в 2019 году по 
+таблице одномерных английских н-грамм eng_1.
+
+SELECT 
+  term,
+  y.year,
+  y.term_frequency,
+  y.document_frequency
+FROM 
+  `bigquery-public-data.google_books_ngrams_2020.eng_1`,
+  UNNEST(years) AS y
+WHERE 
+  term = 'computer'
+  AND y.year = 2019;
+
+
+2. Найдите топ-5 лет, в которые слово 'science' 
+упоминалось чаще всего в книгах, начиная с 1900 года и до конца датасета. 
+Выведите год и суммарную частоту.
+
+SELECT 
+    y.year,
+    SUM
+
+
+3. Нам нужно понять, как изменилась популярность технологий. 
+Напишите запрос, который рассчитывает абсолютный прирост популярности 
+слов 'telephone' и 'internet' между двумя конкретными годами: 1950 и 2010. 
+Результат должен содержать столбцы: term, freq_1950, freq_2010 и 
+growth (разница между 2010 и 1950).
+
