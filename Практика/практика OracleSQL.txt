@@ -149,6 +149,34 @@ ORDER BY salary DESC;
 имя, фамилию, его зарплату, а также максимальную зарплату 
 в его департаменте рядом с каждой строкой.
 
+SELECT first_name, last_name, salary, department_id, 
+MAX(salary) OVER(PARTITION BY department_id) AS max_salary
+FROM employees;
 
 
+7. Выведите имя, фамилию сотрудника, его зарплату, 
+название его департамента, а также разницу между максимальной зарплатой 
+в его департаменте и его собственной зарплатой. 
 
+SELECT e.first_name, e.last_name, e.salary, d.department_name,
+(MAX(e.salary) OVER(PARTITION BY e.department_id) - e.salary) 
+AS salary_diffrenece
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id;
+
+
+8. Выведите имя, фамилию сотрудника, ID департамента и его зарплату. 
+Добавьте столбец, который показывает ранг (место) сотрудника 
+по уровню зарплаты внутри его департамента 
+(самая высокая зарплата должна занимать 1-е место).
+
+SELECT first_name, last_name, department_id, salary,
+DENSE_RANK() OVER(PARTITION BY department_id ORDER BY salary DESC) 
+AS salary_rank
+FROM employees;
+
+
+9. Найдите всех сотрудников, чья зарплата выше, 
+чем зарплата их непосредственного менеджера. 
+Выведите имя сотрудника, его зарплату, 
+а также имя и зарплату его менеджера.
