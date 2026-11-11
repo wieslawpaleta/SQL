@@ -169,8 +169,23 @@ ORDER BY COUNT(customer_id);
 и общую сумму стоимости доставки (freight) для всех оформленных им заказов. 
 Сгруппируйте по фамилии.
 
+SELECT e.last_name, SUM(o.freight) 
+FROM employees e
+INNER JOIN orders o
+ON e.employee_id = o.employee_id
+GROUP BY e.last_name;
 
-16. Из таблицы order_details выведите product_id и общую сумму проданного количества товара (quantity). Оставьте только те товары, которых было продано суммарно более 250 единиц.
+
+16. Из таблицы order_details выведите product_id и 
+общую сумму проданного количества товара (quantity). 
+Оставьте только те товары, которых было продано суммарно более 250 единиц.
+
+SELECT product_id, SUM(quantity)
+FROM order_details
+GROUP BY product_id
+HAVING SUM(quantity) > 250;
 
 
-17. Напишите запрос, который объединяет таблицы orders и order_details. Выведите order_id и общую стоимость заказа (считается как unit_price * quantity), но только для тех заказов, где эта общая стоимость больше 5000.
+17. Напишите запрос, который объединяет таблицы orders и order_details. 
+Выведите order_id и общую стоимость заказа (считается как unit_price * quantity), 
+но только для тех заказов, где эта общая стоимость больше 5000.
