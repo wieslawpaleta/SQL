@@ -233,18 +233,36 @@ WHERE SubTotal > (SELECT MAX(SubTotal)
 
 Задание 8: Оконные функции (Window Functions)
 
-• Цель: Присвоить уникальный ранг (порядковый номер) каждому продукту внутри его подкатегории (ProductSubcategoryID) на основе его цены (ListPrice) от самой дорогой к самой дешевой.
+• Цель: Присвоить уникальный ранг (порядковый номер) 
+каждому продукту внутри его подкатегории (ProductSubcategoryID) 
+на основе его цены (ListPrice) от самой дорогой к самой дешевой.
 • Таблица: Production.Product
-• Подсказка: Используйте оконную функцию DENSE_RANK() или ROW_NUMBER() в сочетании с OVER(PARTITION BY ProductSubcategoryID ORDER BY ListPrice DESC). Исключите продукты, у которых нет подкатегории (WHERE ProductSubcategoryID IS NOT NULL).
+• Подсказка: Используйте оконную функцию DENSE_RANK() или ROW_NUMBER() 
+в сочетании с OVER(PARTITION BY ProductSubcategoryID ORDER BY ListPrice DESC). 
+Исключите продукты, у которых нет подкатегории (WHERE ProductSubcategoryID IS NOT NULL).
+
+SELECT ProductID, Name, ProductSubcategoryID, ListPrice,
+ROW_NUMBER() OVER (PARTITION BY ProductSubcategoryID
+					ORDER BY ListPrice DESC ) AS PriceRank
+FROM Production.Product
+WHERE ProductSubcategoryID IS NOT NULL;
+
 
 Задание 9: Новые регулярные выражения SQL Server 2025 (REGEXP_LIKE)
 
-• Цель: Из таблицы адресов найти все записи, где почтовый индекс (PostalCode) состоит ровно из 5 цифр (например, американские индексы вроде "98052").
+• Цель: Из таблицы адресов найти все записи, 
+где почтовый индекс (PostalCode) состоит ровно из 5 цифр 
+(например, американские индексы вроде "98052").
 • Таблица: Person.Address
-• Подсказка: Используйте функцию REGEXP_LIKE в блоке WHERE. Шаблон регулярного выражения для проверки начала и конца строки из пяти цифр: '^\d{5}$'.
+• Подсказка: Используйте функцию REGEXP_LIKE в блоке WHERE. 
+Шаблон регулярного выражения для проверки начала и конца строки из пяти цифр: '^\d{5}$'.
+
 
 Задание 10: Модификация текста (REGEXP_REPLACE в SQL Server 2025)
 
-• Цель: В описаниях продуктов найти упоминания любых двузначных чисел (например, процентов, градусов или размеров типа "20" или "15") и заменить их на текст [NUM].
+• Цель: В описаниях продуктов найти упоминания любых двузначных чисел 
+(например, процентов, градусов или размеров типа "20" или "15") 
+и заменить их на текст [NUM].
 • Таблица: Production.ProductDescription
-• Подсказка: Используйте функцию REGEXP_REPLACE в блоке SELECT. Шаблон для поиска отдельно стоящего двузначного числа: '\b\d{2}\b'
+• Подсказка: Используйте функцию REGEXP_REPLACE в блоке SELECT. 
+Шаблон для поиска отдельно стоящего двузначного числа: '\b\d{2}\b'
