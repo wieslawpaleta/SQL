@@ -140,7 +140,26 @@ GROUP BY g.GenreId, g.Name;
 14. Покажи список альбомов (albums), в которых содержится более 25 треков. 
 Выведи название альбома и количество треков в нём.
 
-15. Выведи полную стоимость покупок для каждого клиента. Результат должен содержать имя, фамилию клиента и общую сумму из таблицы счетов (invoices), округленную до двух знаков после запятой. Отсортируй по убыванию трат.
+SELECT a.Title, COUNT(t.TrackId) AS number_of_tracks
+FROM album a 
+INNER JOIN track t ON a.AlbumId = t.AlbumId
+GROUP BY a.AlbumId, a.Title
+HAVING COUNT(t.TrackId) > 25
+ORDER BY number_of_tracks DESC;
+
+
+15. Выведи полную стоимость покупок для каждого клиента. 
+Результат должен содержать имя, фамилию клиента и 
+общую сумму из таблицы счетов (invoices), 
+округленную до двух знаков после запятой. 
+Отсортируй по убыванию трат.
+
+SELECT c.FirstName, c.LastName, ROUND(SUM(i.Total), 2) as Total
+FROM customer c 
+INNER JOIN invoice i 
+ON c.CustomerId = i.CustomerId
+GROUP BY c.CustomerId, c.FirstName, c.LastName
+ORDER BY Total DESC;
 
 16. Найди сотрудника (employees), который оформил (является SupportRepId для клиента) больше всего заказов (invoices). Выведи его имя, фамилию и количество чеков.
 
