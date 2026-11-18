@@ -189,3 +189,40 @@ HAVING SUM(quantity) > 250;
 17. Напишите запрос, который объединяет таблицы orders и order_details. 
 Выведите order_id и общую стоимость заказа (считается как unit_price * quantity), 
 но только для тех заказов, где эта общая стоимость больше 5000.
+
+SELECT o.order_id, 
+SUM(od.unit_price * od.quantity) AS total_price
+FROM orders o
+INNER JOIN order_details od
+ON o.order_id = od.order_id
+GROUP BY o.order_id
+HAVING SUM(od.unit_price * od.quantity) > 5000
+ORDER BY total_price DESC;
+
+
+18. Выведите order_id, имя компании-заказчика (company_name из таблицы customers) 
+и итоговую сумму заказа с учетом скидки (unit_price * quantity * (1 - discount)). 
+Округлите сумму до 2 знаков после запятой и покажите только 5 самых крупных заказов.
+
+SELECT o.order_id, c.company_name,
+ROUND(SUM(od.unit_price * od.quantity * (1 - od.discount))::numeric, 2) 
+AS final_amount
+FROM orders or_details od ON o.order_id = od.order_id
+INNER JOIN customers c ON o.customer_id = c.customer_id
+GROUP BY o.order_id, c.company_name
+ORDER BY final_amount DESC
+LIMIT 5;
+
+
+19. Объедините таблицы categories, products, order_details и orders. 
+Выведите название категории (category_name) и 
+общую выручку без учета скидок по каждой категории 
+только за 1997 год (по полю order_date).
+
+20. Найдите всех клиентов из таблицы customers, 
+которые не сделали ни одного заказа. 
+Выведите их customer_id и company_name.
+
+21. Выведите имя и фамилию сотрудника (first_name, last_name из таблицы employees), 
+количество оформленных им заказов и общую сумму этих заказов (без скидки). 
+Покажите только тех сотрудников, у которых сумма продаж превышает 100 000.
