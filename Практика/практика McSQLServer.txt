@@ -257,6 +257,10 @@ WHERE ProductSubcategoryID IS NOT NULL;
 • Подсказка: Используйте функцию REGEXP_LIKE в блоке WHERE. 
 Шаблон регулярного выражения для проверки начала и конца строки из пяти цифр: '^\d{5}$'.
 
+SELECT AddressID, AddressLine1, City, PostalCode
+FROM Person.Address
+WHERE REGEXP_LIKE(PostalCode, '^\d{5}$');
+
 
 Задание 10: Модификация текста (REGEXP_REPLACE в SQL Server 2025)
 
@@ -266,3 +270,7 @@ WHERE ProductSubcategoryID IS NOT NULL;
 • Таблица: Production.ProductDescription
 • Подсказка: Используйте функцию REGEXP_REPLACE в блоке SELECT. 
 Шаблон для поиска отдельно стоящего двузначного числа: '\b\d{2}\b'
+
+SELECT ProductDescriptionID, Description,
+REGEXP_REPLACE(Description, '\b\d{2}\b', '[NUM]')
+FROM Production.ProductDescription;
