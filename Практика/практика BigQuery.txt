@@ -45,3 +45,38 @@ LIMIT 5;
 Результат должен содержать столбцы: term, freq_1950, freq_2010 и 
 growth (разница между 2010 и 1950).
 
+WITH tech_stats AS (
+  SELECT
+    LOWER(term) AS term,
+    SUM(IF(y.year = 1950, y.term_frequency, 0)) AS freq_1950,
+    SUM(IF(y.year = 2010, y.term_frequency, 0)) AS freq_2010
+  FROM
+  `bigquery-public-data.google_books_ngrams_2020.eng_1`,
+  UNNEST(years) AS y
+  WHERE
+    LOWER(term) IN ('telephone', 'internet')
+    AND y.year IN (1950, 2010)
+  GROUP BY
+    1
+)
+SELECT term, freq_1950, freq_2010, (freq_2010 - freq_1950) AS growth
+FROM tech_stats
+ORDER BY growth DESC;
+
+
+4. Нам нужно понять, как менялась популярность носителей информации. 
+Напишите запрос для слов 'radio', 'television' и 'podcast', 
+который выведет их частоту в 1960 и 2015 годах, 
+а также процентный прирост (pct_growth), округлённый до 2 знаков после запятой. 
+Избегайте деления на ноль с помощью SAFE_DIVIDE.
+Столбцы: term, freq_1960, freq_2015, pct_growth.
+
+5. Определите, в какой именно год слова 'computer', 'typewriter' и 'smartphone' достигли максимальной популярности за всю историю наблюдений, и сколько раз они встретились в этот пиковый год. Используйте оконные функции (ROW_NUMBER или QUALIFY).
+Столбцы: term, peak_year, max_frequency.
+
+6. В структуре years помимо term_frequency (сколько раз слово встретилось) есть поле document_frequency (в скольких уникальных книгах оно встретилось). Посчитайте для слова 'algorithm' среднее количество упоминаний на одну книгу в каждом десятилетии XX века (с 1900 по 1999 год).
+Столбцы: decade (например, 1900, 1910...), total_mentions, total_books, mentions_per_book.
+
+7. Переключитесь на таблицу словосочетаний из двух слов (bigquery-public-data.google_books_ngrams_2020.eng_2). Найдите топ-5 самых популярных фраз, начинающихся со слова 'artificial ' (с пробелом), в 2019 году. Обратите внимание, что в таблице eng_2 могут встречаться теги частей речи (например, _NOUN, _ADJ), их нужно отфильтровать, оставив только чистые слова (без символа _).
+Столбцы: term, freq_2019.
+
