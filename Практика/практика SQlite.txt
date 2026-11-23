@@ -161,8 +161,26 @@ ON c.CustomerId = i.CustomerId
 GROUP BY c.CustomerId, c.FirstName, c.LastName
 ORDER BY Total DESC;
 
-16. Найди сотрудника (employees), который оформил (является SupportRepId для клиента) больше всего заказов (invoices). Выведи его имя, фамилию и количество чеков.
+16. Найди сотрудника (employees), который оформил 
+(является SupportRepId для клиента) больше всего заказов (invoices). 
+Выведи его имя, фамилию и количество чеков.
 
-17. Найди самый продаваемый трек за всё время (по суммарному количеству штук в invoice_items). Выведи название трека и сколько раз его купили.
+SELECT
+e.FirstName,
+e.LastName,
+COUNT(i.InvoiceId) AS TotalInvoices
+FROM employee e
+JOIN customer c ON e.EmployeeId = c.SupportRepId
+JOIN invoice i ON c.CustomerId = i.CustomerId
+GROUP BY e.EmployeeId
+Order BY TotalInvoices DESC
+LIMIT 1;
 
-18. Для каждого клиента выведи его имя, фамилию и дату его самой первой покупки. Используй подзапрос или оконную функцию.
+17. Найди самый продаваемый трек за всё время 
+(по суммарному количеству штук в invoice_items). 
+Выведи название трека и сколько раз его купили.
+
+
+18. Для каждого клиента выведи его имя, 
+фамилию и дату его самой первой покупки. 
+Используй подзапрос или оконную функцию.
