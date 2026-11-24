@@ -189,10 +189,45 @@ WHERE e.salary > m.salary;
 
 
 10. Сотрудники, нанятые раньше своего менеджера
-Найдите всех сотрудников, у которых дата найма (hire_date) раньше даты найма их непосредственного менеджера. Выведите имя сотрудника, дату его найма, а также имя и дату найма менеджера
+Найдите всех сотрудников, у которых дата найма (hire_date) 
+раньше даты найма их непосредственного менеджера. 
+Выведите имя сотрудника, дату его найма, а также имя и дату найма менеджера
+
+SELECT e.first_name || ' ' || e.last_name AS employee_name,
+e.hire_date AS employee_hire_date,
+m.first_name || ' ' || m.last_name AS manager_name,
+m.hire_date AS manager_hire_date
+FROM employees e
+JOIN employees m
+ON e.manager_id = m.employee_id
+WHERE e.hire_date < m.hire_date;
+
+
 11. Сотрудники и менеджеры из разных отделов
-Выведите имена всех сотрудников и их менеджеров, если сотрудник работает в другом отделе (department_id), чем его менеджер. Также покажите названия обоих отделов. [1]
+Выведите имена всех сотрудников и их менеджеров, 
+если сотрудник работает в другом отделе (department_id), чем его менеджер. 
+Также покажите названия обоих отделов. 
+
+SELECT e.first_name || ' ' || e.last_name AS employee_name,
+ed.department_name AS employee_department,
+m.first_name || ' ' || m.last_name AS manager_name,
+md.department_name AS manager_department
+FROM employees e
+JOIN employees m 
+ON e.manager_id = m.employee_id
+JOIN departments ed 
+ON e.department_id = ed.department_id
+JOIN departments md 
+ON m.department_id = md.department_id
+WHERE e.department_id <> m.department_id;
+
+
 12. Количество подчинённых у каждого менеджера
-Найдите всех менеджеров (у которых есть хотя бы один подчинённый) и выведите их имя, фамилию и количество прямых подчинённых. Отсортируйте результат по убыванию количества подчинённых.
+Найдите всех менеджеров (у которых есть хотя бы один подчинённый) и 
+выведите их имя, фамилию и количество прямых подчинённых. 
+Отсортируйте результат по убыванию количества подчинённых.
+
 13. Зарплата выше средней по своему отделу
-Выведите имя, фамилию, department_id и зарплату сотрудников, чья зарплата выше средней зарплаты по их отделу. Используйте оконную функцию AVG() OVER()
+Выведите имя, фамилию, department_id и зарплату сотрудников, 
+чья зарплата выше средней зарплаты по их отделу. 
+Используйте оконную функцию AVG() OVER()
