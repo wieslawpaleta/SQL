@@ -274,3 +274,133 @@ WHERE REGEXP_LIKE(PostalCode, '^\d{5}$');
 SELECT ProductDescriptionID, Description,
 REGEXP_REPLACE(Description, '\b\d{2}\b', '[NUM]')
 FROM Production.ProductDescription;
+
+
+
+Задание 11: Внешнее объединение (LEFT JOIN) и поиск отсутствующих данных
+
+• Цель: Найти все товары (ProductID, Name), 
+которые ни разу не были проданы (отсутствуют в таблице деталей заказов).
+• Таблицы: Production.Product и Sales.SalesOrderDetail
+• Подсказка: Используйте LEFT JOIN по ProductID и отфильтруйте записи, 
+где ID из правой таблицы равен NULL.
+
+SELECT Production.Product.ProductID, Production.Product.name
+FROM Production.Product 
+LEFT JOIN Sales.SalesOrderDetail
+ON Production.Product.ProductID = Sales.SalesOrderDetail.ProductID
+WHERE Sales.SalesOrderDetail.SalesOrderID IS NULL;
+
+
+
+Задание 12: Объединение 3-х таблиц и агрегация
+
+• Цель: Посчитать общую выручку (LineTotal) по каждой главной категории товаров 
+(Production.ProductCategory), отсортировав от самой прибыльной к наименее прибыльной.
+• Таблицы: Sales.SalesOrderDetail, Production.Product, 
+Production.ProductSubcategory, Production.ProductCategory
+• Подсказка: Выстройте цепочку INNER JOIN от деталей заказа до главной категории 
+и сгруппируйте по имени категории.
+
+SELECT pc.Name AS CategoryName, 
+       SUM(sod.LineTotal) AS TotalRevenue
+FROM Sales.SalesOrderDetail AS sod
+INNER JOIN Production.Product AS p 
+    ON sod.ProductID = p.ProductID
+INNER JOIN Production.ProductSubcategory AS ps 
+    ON p.ProductSubcategoryID = ps.ProductSubcategoryID
+INNER JOIN Production.ProductCategory AS pc 
+    ON ps.ProductCategoryID = pc.ProductCategoryID
+GROUP BY pc.Name
+ORDER BY TotalRevenue DESC;
+
+
+Задание 13: Обобщенные табличные выражения (CTE) и сравнение с прошлым
+
+• Цель: Найти заказы (SalesOrderID, OrderDate, TotalDue) и показать рядом сумму предыдущего заказа этого же клиента (CustomerID), а также разницу между ними.
+• Таблица: Sales.SalesOrderHeader
+• Подсказка: Используйте оконную функцию LAG(TotalDue) с PARTITION BY CustomerID ORDER BY OrderDate. Оберните запрос в CTE (WITH ... AS), чтобы красиво посчитать разницу.
+
+
+практика McSQLServer.txt
+File
+у меня Microsoft Server SQL AdventureWorks2025 database и такие задачи до сих пор сделал и я бы хотел следующие с ответами и объяснением
+Отличная база! Вы уже освоили базовую фильтрацию, JOIN, агрегацию с HAVING, подзапросы, оконные функции и новые регулярные выражения SQL Server 2025.
+Ниже — 5 новых задач повышенной сложности для базы AdventureWorks2025, которые логически продолжают ваш список (LEFT JOIN, сложная агрегация, CTE, продвинутые оконные функции и еще одна новая функция SQL Server 2025 — REGEXP_SUBSTR).
+
+Задание 11: Внешнее объединение (LEFT JOIN) и поиск отсутствующих данных
+
+• Цель: Найти все товары (ProductID, Name), которые ни разу не были проданы (отсутствуют в таблице деталей заказов).
+• Таблицы: Production.Product и Sales.SalesOrderDetail
+• Подсказка: Используйте LEFT JOIN по ProductID и отфильтруйте записи, где ID из правой таблицы равен NULL.
+Решение:
+sql
+SELECT p.ProductID, p.Name
+FROM Production.Product AS p
+LEFT JOIN Sales.SalesOrderDetail AS sod
+    ON p.ProductID = sod.ProductID
+WHERE sod.SalesOrderID IS NULL;
+Używaj kodu z rozwagą.
+Объяснение: LEFT JOIN берет абсолютно все товары из левой таблицы (Product) и пытается найти им пару в таблице продаж (SalesOrderDetail). Если товар ни разу не покупали, поля из правой таблицы заполняются значениями NULL. Условие WHERE sod.SalesOrderID IS NULL оставляет только такие непроданные позиции.
+
+Задание 12: Объединение 3-х таблиц и агрегация
+
+• Цель: Посчитать общую выручку (LineTotal) по каждой главной категории товаров (Production.ProductCategory), отсортировав от самой прибыльной к наименее прибыльной.
+• Таблицы: Sales.SalesOrderDetail, Production.Product, Production.ProductSubcategory, Production.ProductCategory
+• Подсказка: Выстройте цепочку INNER JOIN от деталей заказа до главной категории и сгруппируйте по имени категории.
+Решение:
+sql
+SELECT pc.Name AS CategoryName, 
+       SUM(sod.LineTotal) AS TotalRevenue
+FROM Sales.SalesOrderDetail AS sod
+INNER JOIN Production.Product AS p 
+    ON sod.ProductID = p.ProductID
+INNER JOIN Production.ProductSubcategory AS ps 
+    ON p.ProductSubcategoryID = ps.ProductSubcategoryID
+INNER JOIN Production.ProductCategory AS pc 
+    ON ps.ProductCategoryID = pc.ProductCategoryID
+GROUP BY pc.Name
+ORDER BY TotalRevenue DESC;
+Używaj kodu z rozwagą.
+Объяснение: В AdventureWorks товары привязаны к подкатегориям, а подкатегории — к категориям. Чтобы добраться от суммы продажи (LineTotal) до имени главной категории, нужно последовательно связать 4 таблицы по их внешним ключам, а затем схлопнуть строки через GROUP BY.
+
+Задание 13: Обобщенные табличные выражения (CTE) и сравнение с прошлым
+
+• Цель: Найти заказы (SalesOrderID, OrderDate, TotalDue) и показать рядом сумму предыдущего заказа этого же клиента (CustomerID), а также разницу между ними.
+• Таблица: Sales.SalesOrderHeader
+• Подсказка: Используйте оконную функцию LAG(TotalDue) с PARTITION BY CustomerID ORDER BY OrderDate. Оберните запрос в CTE (WITH ... AS), чтобы красиво посчитать разницу.
+Решение:
+sql
+WITH CustomerOrders AS (
+    SELECT CustomerID,
+           SalesOrderID,
+           OrderDate,
+           TotalDue,
+           LAG(TotalDue) OVER (PARTITION BY CustomerID ORDER BY OrderDate, SalesOrderID) AS PreviousOrderTotal
+    FROM Sales.SalesOrderHeader
+)
+SELECT CustomerID,
+       SalesOrderID,
+       OrderDate,
+       TotalDue,
+       PreviousOrderTotal,
+       TotalDue - PreviousOrderTotal AS DifferenceFromPrevious
+FROM CustomerOrders
+WHERE PreviousOrderTotal IS NOT NULL;
+Używaj kodu z rozwagą.
+Объяснение: Функция LAG() заглядывает в предыдущую строку внутри окна конкретного клиента (PARTITION BY CustomerID). Мы используем CTE (WITH CustomerOrders), чтобы не дублировать длинную оконную функцию при вычитании TotalDue - PreviousOrderTotal.
+
+Задание 14: Условная агрегация (CASE WHEN внутри SUM)
+
+• Цель: В одной строке для каждого года оформления заказа (YEAR(OrderDate)) вывести количество заказов, сделанных онлайн (OnlineOrderFlag = 1), и количество заказов через менеджеров (OnlineOrderFlag = 0).
+• Таблица: Sales.SalesOrderHeader
+• Подсказка: Используйте конструкцию SUM(CASE WHEN ... THEN 1 ELSE 0 END) и группировку по году.
+
+
+
+Задание 15: Извлечение подстроки по регулярному выражению (SQL Server 2025 — REGEXP_SUBSTR)
+
+• Цель: Из таблицы Production.Product извлечь только буквенный префикс артикула (ProductNumber, например, из 'FR-R92B-58' получить 'FR').
+• Таблица: Production.Product
+• Подсказка: Используйте новую функцию SQL Server 2025 REGEXP_SUBSTR(столбец, 'шаблон'). Шаблон для букв в начале строки: '^[A-Z]+'.
+
