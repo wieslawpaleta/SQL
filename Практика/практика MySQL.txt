@@ -276,9 +276,47 @@ HAVING days_between > 0
 ORDER BY days_between DESC;
 
 
-23. Рассчитайте помесячную выручку магазина за 2005 год, а также добавьте столбец с накопительным итогом (Running Total) выручки от месяца к месяцу. Выведите год, месяц, выручку за месяц и накопительную сумму.
+23. Рассчитайте помесячную выручку магазина за 2005 год, 
+а также добавьте столбец с накопительным итогом (Running Total) 
+выручки от месяца к месяцу. Выведите год, месяц, 
+выручку за месяц и накопительную сумму.
 
-24. Найдите пары актеров, которые снялись вместе как минимум в 3 разных фильмах. Выведите имя и фамилию первого актера, имя и фамилию второго актера и количество совместных фильмов. Избегайте дублирования пар (например, «Актер А — Актер Б» и «Актер Б — Актер А»).
+SELECT YEAR(payment_date) AS payment_year,
+MONTH(payment_date) AS payment_month,
+SUM(amount) AS monthly_revenue,
+SUM(SUM(amount)) OVER (ORDER BY MONTH(payment_date)) AS running_total
+FROM payment
+WHERE YEAR(payment_date) = 2005
+GROUP BY YEAR(payment_date), MONTH(payment_date)
+ORDER BY payment_month;
+
+
+
+24. Найдите пары актеров, которые снялись 
+вместе как минимум в 3 разных фильмах. 
+Выведите имя и фамилию первого актера, 
+имя и фамилию второго актера и количество совместных фильмов. 
+Избегайте дублирования пар (например, «Актер А — Актер Б» 
+и «Актер Б — Актер А»).
+
+
+SELECT 
+    a1.first_name AS actor1_first_name,
+    a1.last_name AS actor1_last_name,
+    a2.first_name AS actor2_first_name,
+    a2.last_name AS actor2_last_name,
+    COUNT(fa1.film_id) AS shared_films
+FROM film_actor fa1
+JOIN film_actor fa2 
+    ON fa1.film_id = fa2.film_id 
+    AND fa1.actor_id < fa2.actor_id
+JOIN actor a1 ON fa1.actor_id = a1.actor_id
+JOIN actor a2 ON fa2.actor_id = a2.actor_id
+GROUP BY fa1.actor_id, fa2.actor_id, a1.first_name, a1.last_name, 
+a2.first_name, a2.last_name
+HAVING COUNT(fa1.film_id) >= 3
+ORDER BY shared_films DESC;
+
 
 25. Найдите имена, фамилии и email клиентов, которые брали в аренду фильмы абсолютно всех существующих в базе категорий.
 
