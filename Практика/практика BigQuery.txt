@@ -71,6 +71,28 @@ ORDER BY growth DESC;
 Избегайте деления на ноль с помощью SAFE_DIVIDE.
 Столбцы: term, freq_1960, freq_2015, pct_growth.
 
+SELECT
+  term,
+  SUM(CASE WHEN y.year = 1960 THEN y.term_frequency ELSE 0 END) AS freq_1960,
+  SUM(CASE WHEN y.year = 2015 THEN y.term_frequency ELSE 0 END) AS freq_2015,
+  ROUND(
+    SAFE_DIVIDE(
+      SUM(CASE WHEN y.year = 2015 THEN y.term_frequency ELSE 0 END) - 
+      SUM(CASE WHEN y.year = 1960 THEN y.term_frequency ELSE 0 END),
+      SUM(CASE WHEN y.year = 1960 THEN y.term_frequency ELSE 0 END)
+    ) * 100, 
+    2
+  ) AS pct_growth
+FROM
+  `bigquery-public-data.google_books_ngrams_2020.eng_1`,
+  UNNEST(years) AS y
+WHERE
+  term IN ('radio', 'television', 'podcast')
+  AND y.year IN (1960, 2015)
+GROUP BY
+  term;
+
+
 5. Определите, в какой именно год слова 'computer', 'typewriter' и 'smartphone' достигли максимальной популярности за всю историю наблюдений, и сколько раз они встретились в этот пиковый год. Используйте оконные функции (ROW_NUMBER или QUALIFY).
 Столбцы: term, peak_year, max_frequency.
 
